@@ -36,7 +36,7 @@ You can view a fully working demo at [nextjs-app-supabase-template.vercel.app](h
 
 Add required [`environment-variables`](#clone-and-run-locally) while deploying on Vercel:
 
-[![Deploy with Vercel](https://camo.githubusercontent.com/b9ff564d8c311812747f1aacea54cf703d850756f9179f9eff6899da20a701a2/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f76657263656c2d2532333030303030302e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d76657263656c266c6f676f436f6c6f723d7768697465)](https://vercel.com/new/clone?s=https%3A%2F%2Fgithub.com%2FNavin-Jethwani-76%2Fnextjs-supabase-starter&showOptionalTeamCreation=false)
+[![Deploy with Vercel](https://camo.githubusercontent.com/b9ff564d8c311812747f1aacea54cf703d850756f9179f9eff6899da20a701a2/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f76657263656c2d2532333030303030302e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d76657263656c266c6f676f436f6c6f723d7768697465)](https://vercel.com/new/clone?s=https%3A%2F%2Fgithub.com%2FNavin-Jethwani-76%2Fnextjs-supabase-template&showOptionalTeamCreation=false)
 
 The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
 
@@ -49,13 +49,13 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
 2. Clone this repo
 
    ```bash
-   git clone https://github.com/Navin-Jethwani-76/nextjs-supabase-starter.git
+   git clone https://github.com/Navin-Jethwani-76/nextjs-supabase-template.git
    ```
 
 3. Use `cd` to change into the app's directory
 
    ```bash
-   cd nextjs-supabase-starter
+   cd nextjs-supabase-template
    npm install
    ```
 
@@ -83,4 +83,4 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
 
 ## Feedback and issues
 
-Please file feedback and issues [Here](https://github.com/Navin-Jethwani-76/nextjs-supabase-starter/issues/new).
+Please file feedback and issues [Here](https://github.com/Navin-Jethwani-76/nextjs-supabase-template/issues/new).
