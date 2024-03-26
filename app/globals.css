@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .custom-file-uploader {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 250px !important;
+    max-width: 100% !important;
+  }
+  .custom-file-uploader input {
+    width: 100% !important;
+  }
+  .custom-file-uploader span {
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 20px !important;
+  }
+}
