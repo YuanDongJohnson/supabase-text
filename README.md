@@ -1,5 +1,5 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
+<a href="https://nextjs-app-supabase-template.vercel.app/">
+  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://nextjs-app-supabase-template.vercel.app/opengraph-image.png">
   <h1 align="center">Next.js and Supabase Starter Kit</h1>
 </a>
 
@@ -24,13 +24,14 @@
   - Server Rendered
   - Middleware
   - Protected Routes
+  - Type-Safed Schema using Drizzle ORM
 
 - supabase-ssr. A package to configure Supabase Auth to use cookies
 - Styling with [Next UI](https://nextui.org/)
 
 ## Demo
 
-You can view a fully working demo at [nextjs-app-supabase-template.vercel.app](https://nextjs-app-supabase-template.vercel.app/).
+You can view a fully working demo at [https://nextjs-app-supabase-template.vercel.app](https://nextjs-app-supabase-template.vercel.app/).
 
 ## Deploy to Vercel
 
@@ -69,7 +70,11 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
    NEXT_PUBLIC_SUPABASE_BUCKET=[INSERT SUPABASE PROJECT STORAGE BUCKET NAME]
    ```
 
-   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `DATABASE_URL` and `SUPABASE_ADMIN_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_ADMIN_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+
+   - `DATABASE_URL` can be found in [your Supabase project's Database settings](https://supabase.com/dashboard/project/_/settings/database)
+
+   - `NEXT_PUBLIC_SUPABASE_BUCKET` can be anything. by default 'bucket-01' will be present in `.env.local` but you will need to create the bucket of the same name inside [your Supabase project's Storage](https://supabase.com/dashboard/project/_/storage/buckets).
 
 5. You can now run the Next.js local development server:
 
@@ -82,5 +87,12 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
 > Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
 
 ## Feedback and issues
+
+- If you have enabled RLS in Supabase, You need to add policies to public tables and storage.objects.
+- Policies enabled in [Demo](https://nextjs-app-supabase-template.vercel.app/) are listed below.
+  - Policy for [`public.products`](https://github.com/Navin-Jethwani-76/nextjs-supabase-template/blob/main/public/policy_public_products.png)
+  - Select Policy for [`storage.objects`](https://github.com/Navin-Jethwani-76/nextjs-supabase-template/blob/main/public/policy_select_storage_objects.png)
+  - Delete Policy for [`storage.objects`](https://github.com/Navin-Jethwani-76/nextjs-supabase-template/blob/main/public/policy_delete_storage_objects.png) - Only delete if authenticated with user id.
+  - Insert Policy for [`storage.objects`](https://github.com/Navin-Jethwani-76/nextjs-supabase-template/blob/main/public/policy_insert_storage_objects.png) - Only Insert if authenticated with user id.
 
 Please file feedback and issues [Here](https://github.com/Navin-Jethwani-76/nextjs-supabase-template/issues/new).

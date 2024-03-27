@@ -142,7 +142,7 @@ const FilesTable = ({ files, user }: { files: FileObject[]; user: User }) => {
           />
         </div>
       ) : (
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between gap-4">
           <MessageCard message={`Total Files : ${files.length}`} />
           <MessageCard
             message={`Selected Files : ${
@@ -187,6 +187,7 @@ const FilesTable = ({ files, user }: { files: FileObject[]; user: User }) => {
         topContent={topContent}
         bottomContent={bottomContent}
         topContentPlacement="outside"
+        bottomContentPlacement="outside"
         selectionMode="multiple"
         selectedKeys={selectedKeys}
         onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
