@@ -43,7 +43,11 @@ const SocialAuth = () => {
           await supabase.auth.signInWithOAuth({
             provider: "github",
             options: {
-              redirectTo,
+              queryParams: {
+                access_type: "offline",
+                prompt: "consent",
+              },
+             redirectTo,
             },
           });
         }}
