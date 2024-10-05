@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import SubmitButton from "@/components/Common/Submit-Button";
@@ -12,22 +12,44 @@ import MessageCard from "@/components/Common/MessageCard";
 import ErrorCard from "@/components/Common/ErrorCard";
 import { Checkbox } from '@nextui-org/react';
 
-
 interface AuthForm {
   method: "login" | "signup";
   searchParams: Record<string, string | string[] | undefined>;
 }
 
-const AuthForm = async ({ method, searchParams }: AuthForm) => {
+const AuthForm = ({ method, searchParams }: AuthForm) => {
   const supabase = createClient();
+  const [user, setUser] = useState(null);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [username, setUsername] = useState('');
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    setUser(user);
+  }, []);
 
   if (user) {
     return redirect(`/profile`);
   }
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleRememberMeChange = (checked) => {
+    setRememberMe(checked);
+    if (checked) {
+      localStorage.setItem('username', username);
+    } else {
+      localStorage.removeItem('username');
+    }
+  };
 
   const signIn = async (formData: FormData) => {
     "use server";
@@ -47,6 +69,7 @@ const AuthForm = async ({ method, searchParams }: AuthForm) => {
 
     return redirect(searchParams.next ? `/${searchParams.next}` : "/");
   };
+
   const signUp = async (formData: FormData) => {
     "use server";
 
@@ -67,10 +90,9 @@ const AuthForm = async ({ method, searchParams }: AuthForm) => {
       return redirect(`/auth/signup?error=${error.message}`);
     }
 
-    return redirect(
-      "/auth/signup?message=Check email to continue sign in process"
-    );
+    return redirect("/auth/signup?message=Check email to continue sign in process");
   };
+
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-4">
       <SocialAuth />
@@ -78,20 +100,25 @@ const AuthForm = async ({ method, searchParams }: AuthForm) => {
       <form className="animate-in flex flex-col w-full justify-center gap-4 text-foreground">
         {searchParams.message && <MessageCard message={searchParams.message} />}
         {searchParams.error && <ErrorCard error={searchParams.error} />}
-        <EmailInput />
+        <EmailInput value={username} onChange={(e) => setUsername(e.target.value)} />
         <div className="flex flex-col gap-2">
-  <PasswordInput method={method} />
-  <div className="flex items-center justify-between">
-    <Checkbox name="remember">Remember Me</Checkbox>
-    <Link
-      className="text-blue-500"
-      href={"/auth/reset-password"}
-    >
-      Forgot Password?
-    </Link>
-  </div>
-</div>
-
+          <PasswordInput method={method} />
+          <div className="flex items-center justify-between">
+            <Checkbox
+              name="remember"
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+            >
+              Remember Me
+            </Checkbox>
+            <Link
+              className="text-blue-500"
+              href={"/auth/reset-password"}
+            >
+              Forgot Password?
+            </Link>
+          </div>
+        </div>
         <SubmitButton
           formAction={method == "login" ? signIn : signUp}
           loadingText={method == "login" ? "Signing In..." : "Signing Up..."}
@@ -112,7 +139,7 @@ const AuthForm = async ({ method, searchParams }: AuthForm) => {
           ) : (
             <>
               Have an account?{" "}
-              <Link className="text-blue-500" href={"/auth/login"}>
+              <Link className="text-blue-5000" href={"/auth/login"}>
                 Sign In
               </Link>
             </>
