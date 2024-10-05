@@ -24,15 +24,19 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    setUser(user);
-  }, []);
+    const fetchUser = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error("Failed to fetch user", error);
+      }
+    };
 
-  if (user) {
-    return redirect(`/profile`);
-  }
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -139,7 +143,7 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
           ) : (
             <>
               Have an account?{" "}
-              <Link className="text-blue-5000" href={"/auth/login"}>
+              <Link className="text-blue-500" href={"/auth/login"}>
                 Sign In
               </Link>
             </>
