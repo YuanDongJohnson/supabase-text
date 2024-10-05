@@ -5,7 +5,6 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import SubmitButton from "@/components/Common/Submit-Button";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { Divider } from "@nextui-org/react";
 import SocialAuth from "@/components/auth/SocialAuth";
 import EmailInput from "@/components/auth/EmailInput";
@@ -80,7 +79,6 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
   };
 
   const signUp = async (formData: FormData) => {
-    const origin = headers().get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = createClient();
