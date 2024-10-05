@@ -10,6 +10,8 @@ import EmailInput from "@/components/auth/EmailInput";
 import PasswordInput from "@/components/auth/PasswordInput";
 import MessageCard from "@/components/Common/MessageCard";
 import ErrorCard from "@/components/Common/ErrorCard";
+import { Checkbox } from '@nextui-org/react';
+
 
 interface AuthForm {
   method: "login" | "signup";
