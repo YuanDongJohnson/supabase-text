@@ -1,4 +1,5 @@
-// 引入必要的库和组件
+"use client"; // 确保这行代码在文件的最顶部
+
 import React, { useState, useEffect } from 'react';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -13,20 +14,17 @@ import MessageCard from "@/components/Common/MessageCard";
 import ErrorCard from "@/components/Common/ErrorCard";
 import { Checkbox } from '@nextui-org/react';
 
-// 定义AuthForm组件的props类型
 interface AuthForm {
   method: "login" | "signup";
   searchParams: Record<string, string | string[] | undefined>;
 }
 
-// AuthForm组件
 const AuthForm = ({ method, searchParams }: AuthForm) => {
   const supabase = createClient();
   const [user, setUser] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
   const [username, setUsername] = useState('');
 
-  // 使用useEffect钩子来获取当前认证的用户
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -42,7 +40,6 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
     fetchUser();
   }, []);
 
-  // 使用useEffect钩子来设置记住的用户名
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
@@ -51,7 +48,6 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
     }
   }, []);
 
-  // 处理记住我复选框的变化
   const handleRememberMeChange = (checked) => {
     setRememberMe(checked);
     if (checked) {
@@ -61,7 +57,6 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
     }
   };
 
-  // 处理登录逻辑
   const signIn = async (formData: FormData) => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -84,7 +79,6 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
     }
   };
 
-  // 处理注册逻辑
   const signUp = async (formData: FormData) => {
     const origin = headers().get("origin");
     const email = formData.get("email") as string;
@@ -113,7 +107,6 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
     }
   };
 
-  // 渲染组件
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-4">
       <SocialAuth />
