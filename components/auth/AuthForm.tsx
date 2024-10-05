@@ -80,6 +80,7 @@ const AuthForm = async ({ method, searchParams }: AuthForm) => {
         <div className="flex flex-col gap-2">
           <PasswordInput method={method} />
           {method == "login" && (
+      <Checkbox name="remember">Remember Me</Checkbox>
             <Link
               className="flex justify-end text-blue-500"
               href={"/auth/reset-password"}
