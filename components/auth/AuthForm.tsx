@@ -1,3 +1,5 @@
+"use client"; // 告诉Next.js这个组件需要在客户端渲染
+
 import React, { useState, useEffect } from 'react';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -82,7 +84,7 @@ const AuthForm = ({ method, searchParams }: AuthForm) => {
     const password = formData.get("password") as string;
     const supabase = createClient();
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } from await supabase.auth.signUp({
       email,
       password,
       options: {
