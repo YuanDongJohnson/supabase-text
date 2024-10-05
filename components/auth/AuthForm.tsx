@@ -78,17 +78,18 @@ const AuthForm = async ({ method, searchParams }: AuthForm) => {
         {searchParams.error && <ErrorCard error={searchParams.error} />}
         <EmailInput />
         <div className="flex flex-col gap-2">
-          <PasswordInput method={method} />
-          {method == "login" && (
-      <Checkbox name="remember">Remember Me</Checkbox>
-            <Link
-              className="flex justify-end text-blue-500"
-              href={"/auth/reset-password"}
-            >
-              Forgot Password?
-            </Link>
-          )}
-        </div>
+  <PasswordInput method={method} />
+  <div className="flex items-center justify-between">
+    <Checkbox name="remember">Remember Me</Checkbox>
+    <Link
+      className="text-blue-500"
+      href={"/auth/reset-password"}
+    >
+      Forgot Password?
+    </Link>
+  </div>
+</div>
+
         <SubmitButton
           formAction={method == "login" ? signIn : signUp}
           loadingText={method == "login" ? "Signing In..." : "Signing Up..."}
