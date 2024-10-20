@@ -1,51 +1,47 @@
-import { createClient } from "@/utils/supabase/server";
-import { Button, Dialog, DialogContent, DialogTitle, DialogFooter, DialogButton } from "@nextui-org/react";
+import { Button, Dialog, DialogOverlay, DialogContent, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
-import { useState } from "react";
 import { IoPersonCircleOutline } from "react-icons/io5";
 
 export default function AuthButton() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const supabase = createClient();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const handleLoginModalOpen = () => {
-    setIsLoginModalOpen(true);
-  };
+  // 在组件加载时检查用户是否已经登录
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
 
-  const handleLoginModalClose = () => {
-    setIsLoginModalOpen(false);
-  };
-
-  const {
-    data: { user },
-  } = user ? { data: { user: null } } : await supabase.auth.getUser();
+    checkUser();
+  }, [supabase]);
 
   return (
     <>
       {user ? (
-        <Button href="/profile" variant="bordered" as={Link} isIconOnly>
-          <IoPersonCircleOutline size={24} />
+        <Button as={Link} href="/profile" variant="bordered" startIcon={<IoPersonCircleOutline size={24} />}>
+          Profile
         </Button>
       ) : (
-        <Button onClick={handleLoginModalOpen} variant="bordered" as={Link}>
+        <Button onClick={onOpen} variant="bordered" startIcon={<IoPersonCircleOutline size={24} />}>
           Login
         </Button>
       )}
-      <Dialog open={isLoginModalOpen} onClose={handleLoginModalClose}>
-        <DialogTitle>Login</DialogTitle>
+
+      <DialogOverlay isOpen={isOpen} onDismiss={onClose}>
         <DialogContent>
-          {/* 在这里添加登录表单的代码 */}
-          <p>Please log in to your account.</p>
-        </DialogContent>
-        <DialogFooter>
-          <DialogButton onClick={handleLoginModalClose} variant="outlined">
-            Close
-          </DialogButton>
-          <DialogButton onClick={handleLoginModalClose} variant="contained" color="primary">
+          <Button
+            as={Link}
+            href="/auth/login"
+            variant="bordered"
+            onClick={onClose}
+            autoFocus
+          >
             Login
-          </DialogButton>
-        </DialogFooter>
-      </Dialog>
+          </Button>
+        </DialogContent>
+      </DialogOverlay>
     </>
   );
 }
