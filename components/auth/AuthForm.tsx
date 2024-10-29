@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import SubmitButton from "@/components/Common/Submit-Button";
@@ -14,21 +12,29 @@ import MessageCard from "@/components/Common/MessageCard";
 import ErrorCard from "@/components/Common/ErrorCard";
 import { Checkbox } from '@nextui-org/react';
 
-interface AuthFormProps {
+
+interface AuthForm {
   method: "login" | "signup";
   searchParams: Record<string, string | string[] | undefined>;
 }
 
-const AuthForm = ({ method, searchParams }: AuthFormProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const AuthForm = async ({ method, searchParams }: AuthForm) => {
   const supabase = createClient();
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    return redirect(`/profile`);
+  }
 
   const signIn = async (formData: FormData) => {
+    "use server";
+
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const supabase = createClient();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -36,18 +42,18 @@ const AuthForm = ({ method, searchParams }: AuthFormProps) => {
     });
 
     if (error) {
-      // Handle error, possibly show a message to the user
-      return;
+      return redirect(`/auth/login?error=${error.message}`);
     }
 
-    handleCloseModal();
-    redirect(searchParams.next ? `/${searchParams.next}` : "/");
+    return redirect(searchParams.next ? `/${searchParams.next}` : "/");
   };
-
   const signUp = async (formData: FormData) => {
+    "use server";
+
     const origin = headers().get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const supabase = createClient();
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -58,65 +64,61 @@ const AuthForm = ({ method, searchParams }: AuthFormProps) => {
     });
 
     if (error) {
-      // Handle error, possibly show a message to the user
-      return;
+      return redirect(`/auth/signup?error=${error.message}`);
     }
 
-    handleCloseModal();
-    // Redirect to a confirmation page or similar
+    return redirect(
+      "/auth/signup?message=Check email to continue sign in process"
+    );
   };
-
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-4">
-      <button onClick={handleOpenModal}>
-        {method === "login" ? "Sign In" : "Sign Up"}
-      </button>
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>{method === "login" ? "Sign In" : "Sign Up"}</h2>
-            <form>
-              {searchParams.message && <MessageCard message={searchParams.message} />}
-              {searchParams.error && <ErrorCard error={searchParams.error} />}
-              <EmailInput />
-              <PasswordInput method={method} />
-              <div className="flex items-center justify-between">
-                <Checkbox name="remember">Remember Me</Checkbox>
-                <Link className="text-blue-500" href={"/auth/reset-password"}>
-                  Forgot Password?
-                </Link>
-              </div>
-              <SubmitButton
-                onClick={method === "login" ? signIn : signUp}
-                loadingText={method === "login" ? "Signing In..." : "Signing Up..."}
-                fullWidth
-                variant="solid"
-                color="success"
-              >
-                {method === "login" ? "Sign In" : "Sign Up"}
-              </SubmitButton>
-              <p className="w-full text-center">
-                {method === "login" ? (
-                  <>
-                    Don't have an account?{" "}
-                    <Link className="text-blue-500" href={"/auth/signup"}>
-                      Sign Up
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    Have an account?{" "}
-                    <Link className="text-blue-500" href={"/auth/login"}>
-                      Sign In
-                    </Link>
-                  </>
-                )}
-              </p>
-            </form>
-            <button onClick={handleCloseModal}>Close</button>
-          </div>
-        </div>
-      )}
+      <SocialAuth />
+      <Divider />
+      <form className="animate-in flex flex-col w-full justify-center gap-4 text-foreground">
+        {searchParams.message && <MessageCard message={searchParams.message} />}
+        {searchParams.error && <ErrorCard error={searchParams.error} />}
+        <EmailInput />
+        <div className="flex flex-col gap-2">
+  <PasswordInput method={method} />
+  <div className="flex items-center justify-between">
+    <Checkbox name="remember">Remember Me</Checkbox>
+    <Link
+      className="text-blue-500"
+      href={"/auth/reset-password"}
+    >
+      Forgot Password?
+    </Link>
+  </div>
+</div>
+
+        <SubmitButton
+          formAction={method == "login" ? signIn : signUp}
+          loadingText={method == "login" ? "Signing In..." : "Signing Up..."}
+          fullWidth
+          variant="solid"
+          color="success"
+        >
+          {method == "login" ? "Sign In" : "Sign Up"}
+        </SubmitButton>
+        <p className="w-full text-center">
+          {method == "login" ? (
+            <>
+              Don't have an account?{" "}
+              <Link className="text-blue-500" href={"/auth/signup"}>
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <>
+              Have an account?{" "}
+              <Link className="text-blue-500" href={"/auth/login"}>
+                Sign In
+              </Link>
+            </>
+          )}
+        </p>
+      </form>
     </div>
   );
 };
