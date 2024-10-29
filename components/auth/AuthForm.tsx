@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -10,14 +12,14 @@ import EmailInput from "@/components/auth/EmailInput";
 import PasswordInput from "@/components/auth/PasswordInput";
 import MessageCard from "@/components/Common/MessageCard";
 import ErrorCard from "@/components/Common/ErrorCard";
-import { Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Button } from "@nextui-org/react";
+import { Checkbox } from '@nextui-org/react';
 
-interface AuthForm {
+interface AuthFormProps {
   method: "login" | "signup";
   searchParams: Record<string, string | string[] | undefined>;
 }
 
-const AuthForm = ({ method, searchParams }: AuthForm) => {
+const AuthForm = ({ method, searchParams }: AuthFormProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const supabase = createClient();
 
