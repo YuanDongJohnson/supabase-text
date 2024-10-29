@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import SubmitButton from "@/components/Common/Submit-Button";
@@ -68,19 +68,17 @@ const AuthForm = ({ method, searchParams }: AuthFormProps) => {
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-4">
-      <Button onClick={handleOpenModal} variant="bordered">
+      <button onClick={handleOpenModal}>
         {method === "login" ? "Sign In" : "Sign Up"}
-      </Button>
-      <Dialog open={isModalOpen} onDismiss={handleCloseModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{method === "login" ? "Sign In" : "Sign Up"}</DialogTitle>
-          </DialogHeader>
-          <form className="animate-in flex flex-col w-full justify-center gap-4 text-foreground">
-            {searchParams.message && <MessageCard message={searchParams.message} />}
-            {searchParams.error && <ErrorCard error={searchParams.error} />}
-            <EmailInput />
-            <div className="flex flex-col gap-2">
+      </button>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>{method === "login" ? "Sign In" : "Sign Up"}</h2>
+            <form>
+              {searchParams.message && <MessageCard message={searchParams.message} />}
+              {searchParams.error && <ErrorCard error={searchParams.error} />}
+              <EmailInput />
               <PasswordInput method={method} />
               <div className="flex items-center justify-between">
                 <Checkbox name="remember">Remember Me</Checkbox>
@@ -88,41 +86,37 @@ const AuthForm = ({ method, searchParams }: AuthFormProps) => {
                   Forgot Password?
                 </Link>
               </div>
-            </div>
-            <SubmitButton
-              formAction={method === "login" ? signIn : signUp}
-              loadingText={method === "login" ? "Signing In..." : "Signing Up..."}
-              fullWidth
-              variant="solid"
-              color="success"
-            >
-              {method === "login" ? "Sign In" : "Sign Up"}
-            </SubmitButton>
-            <p className="w-full text-center">
-              {method === "login" ? (
-                <>
-                  Don't have an account?{" "}
-                  <Link className="text-blue-500" href={"/auth/signup"}>
-                    Sign Up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  Have an account?{" "}
-                  <Link className="text-blue-500" href={"/auth/login"}>
-                    Sign In
-                  </Link>
-                </>
-              )}
-            </p>
-          </form>
-        </DialogContent>
-        <DialogFooter>
-          <Button onClick={handleCloseModal} variant="outlined" color="error">
-            Close
-          </Button>
-        </DialogFooter>
-      </Dialog>
+              <SubmitButton
+                onClick={method === "login" ? signIn : signUp}
+                loadingText={method === "login" ? "Signing In..." : "Signing Up..."}
+                fullWidth
+                variant="solid"
+                color="success"
+              >
+                {method === "login" ? "Sign In" : "Sign Up"}
+              </SubmitButton>
+              <p className="w-full text-center">
+                {method === "login" ? (
+                  <>
+                    Don't have an account?{" "}
+                    <Link className="text-blue-500" href={"/auth/signup"}>
+                      Sign Up
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    Have an account?{" "}
+                    <Link className="text-blue-500" href={"/auth/login"}>
+                      Sign In
+                    </Link>
+                  </>
+                )}
+              </p>
+            </form>
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
